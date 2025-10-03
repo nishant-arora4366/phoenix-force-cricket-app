@@ -251,7 +251,7 @@ const auctionSchema = new Schema<IAuction>({
   timestamps: true,
   toJSON: { 
     virtuals: true,
-    transform(doc, ret) {
+    transform(doc, ret: any) {
       delete ret.__v;
       return ret;
     }

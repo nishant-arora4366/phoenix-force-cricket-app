@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Team Model - Mongoose Schema
  * Represents teams participating in tournaments

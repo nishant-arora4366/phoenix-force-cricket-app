@@ -6,15 +6,17 @@ import { withAuth, requireAuctioneer, AuthenticatedRequest } from '@/lib/middlew
 // GET /api/auctions/[id]
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
+  
   const authHandler = withAuth(async (
     req: AuthenticatedRequest
   ) => {
     try {
       await connectToDatabase();
     
-      const auction = await Auction.findById(context.params.id)
+      const auction = await Auction.findById(params.id)
         .populate('tournamentId', 'name format settings')
         .populate('currentPlayer', 'name role basePrice battingStyle bowlingStyle')
         .populate('players', 'name role basePrice')
@@ -44,17 +46,18 @@ export async function GET(
     }
   });
   
-  return authHandler(req, { params });
+  return authHandler(req);
 }
 
 // PUT /api/auctions/[id] - Update auction (Auctioneer or Admin)
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
+  
   const authHandler = requireAuctioneer(async (
-    req: AuthenticatedRequest,
-    { params }: { params: { id: string } }
+    req: AuthenticatedRequest
   ) => {
     try {
       await connectToDatabase();
@@ -104,17 +107,18 @@ export async function PUT(
     }
   });
   
-  return authHandler(req, { params });
+  return authHandler(req);
 }
 
 // DELETE /api/auctions/[id] - Cancel auction (Auctioneer or Admin)
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
+  
   const authHandler = requireAuctioneer(async (
-    req: AuthenticatedRequest,
-    { params }: { params: { id: string } }
+    req: AuthenticatedRequest
   ) => {
     try {
       await connectToDatabase();
@@ -153,5 +157,5 @@ export async function DELETE(
     }
   });
   
-  return authHandler(req, { params });
+  return authHandler(req);
 }

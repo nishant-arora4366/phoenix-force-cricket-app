@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     // Find user by email or username
     const user = await User.findByEmailOrUsername(identifier);
     
-    if (!user) {
+    if (!user || !('_id' in user)) {
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
     
     // Generate JWT token
     const token = generateToken({
-      userId: user._id.toString(),
+      userId: (user as any)._id.toString(),
       username: user.username,
       email: user.email,
       role: user.role,
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       user: {
-        id: user._id,
+        id: (user as any)._id,
         username: user.username,
         email: user.email,
         role: user.role,

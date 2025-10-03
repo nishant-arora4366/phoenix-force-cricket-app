@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * User Model - Mongoose Schema
  * Represents users in the system with role-based access

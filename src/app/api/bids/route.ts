@@ -159,8 +159,8 @@ export const POST = withAuth(async (req: AuthenticatedRequest) => {
     const bid = await Bid.createBid(bidData);
     
     // Update auction's current bid
-    auction.currentBid = bid._id;
-    auction.bidHistory.push(bid._id);
+    auction.currentBid = (bid as any)._id;
+    auction.bidHistory.push((bid as any)._id);
     await auction.save();
     
     // Populate references

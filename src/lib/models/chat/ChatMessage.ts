@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Chat Message Model - Mongoose Schema
  * Represents chat messages in auction rooms

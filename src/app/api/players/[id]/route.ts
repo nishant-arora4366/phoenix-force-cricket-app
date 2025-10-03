@@ -6,8 +6,10 @@ import { requireAdmin, AuthenticatedRequest } from '@/lib/middleware/auth';
 // GET /api/players/[id] - Get player by ID
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const params = await context.params;
+  
   try {
     await connectToDatabase();
     
@@ -36,10 +38,15 @@ export async function GET(
 }
 
 // PUT /api/players/[id] - Update player (Admin only)
-export const PUT = requireAdmin(async (
-  req: AuthenticatedRequest,
-  { params }: { params: { id: string } }
-) => {
+export async function PUT(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  const params = await context.params;
+  
+  const authHandler = requireAdmin(async (
+    req: AuthenticatedRequest
+  ) => {
   try {
     await connectToDatabase();
     
@@ -85,13 +92,21 @@ export const PUT = requireAdmin(async (
       { status: 500 }
     );
   }
-});
+  });
+  
+  return authHandler(req);
+}
 
 // DELETE /api/players/[id] - Delete player (Admin only)
-export const DELETE = requireAdmin(async (
-  req: AuthenticatedRequest,
-  { params }: { params: { id: string } }
-) => {
+export async function DELETE(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  const params = await context.params;
+  
+  const authHandler = requireAdmin(async (
+    req: AuthenticatedRequest
+  ) => {
   try {
     await connectToDatabase();
     
@@ -121,4 +136,7 @@ export const DELETE = requireAdmin(async (
       { status: 500 }
     );
   }
-});
+  });
+  
+  return authHandler(req);
+}

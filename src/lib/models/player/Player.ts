@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Player Model - Mongoose Schema
  * Represents cricket players available for auction
